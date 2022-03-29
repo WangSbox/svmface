@@ -24,7 +24,7 @@ def photoextract(photopath,texturefilters,per_frame=4,num_worker=4,save=True,sav
         count = 0
         for j in range(0,len(photo_list),per_frame):
             frame = cv.imread(os.path.join(os.path.join(photopath,photo[i]),photo_list[j]),1)
-            if frame is  not None:
+            if frame is not None:
                 result.append(pool.apply_async(zxc, (frame,texturefilters, )))
                 count += 1
             if count % save_perframe ==0:
@@ -33,15 +33,16 @@ def photoextract(photopath,texturefilters,per_frame=4,num_worker=4,save=True,sav
                 data = []
                 for re in result:
                     res = re.get()
-                    if len(res)==21858:
+                    if res.shape[1]==21858:
                         # print(re.get())
-                        data.append(res)
+                        data.append(res[0,:])
                 data = np.array(data)
                 print(data.shape)
                 if save:
                     # if  os.path.exists(photo[i]) == False:
                     #     os.mkdir(photo[i])
-                    np.save(photo[i] + str(int(count/save_perframe)) + '.npy',data)#单数组保存
+                    pass
+                    # np.save(photo[i] + str(int(count/save_perframe)) + '.npy',data)#单数组保存
                 pool = multiprocessing.Pool(processes=num_worker)
                 result = []
                 # time.sleep(1000)
